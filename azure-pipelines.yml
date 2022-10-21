@@ -25,4 +25,4 @@ stages:
           containerRegistry: 'DockerHub'
           repository: 'paloni/weatherapp'
           command: 'buildAndPush'
-          Dockerfile: '**/Dockerfile'
+          Dockerfile: '**/dockerfile'
