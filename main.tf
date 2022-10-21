@@ -17,6 +17,11 @@ resource "azurerm_resource_group" "tf_test"{
     location = "North Central US"
 }
 
+variable "imagebuild"{
+    type = "string"
+    description = "Latest image build"
+}
+
 resource "azurerm_container_group" "tf_container" {
     name = "weatherapi"
     location = azurerm_resource_group.tf_test.location
@@ -26,7 +31,7 @@ resource "azurerm_container_group" "tf_container" {
 
     container {
         name            = "weatherapi"
-        image           = "paloni/weatherapp"
+        image           = "paloni/weatherapp:${var.imagebuild}"
         cpu             = "1"
         memory          = "1"
 
