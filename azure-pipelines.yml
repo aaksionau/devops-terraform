@@ -26,3 +26,29 @@ stages:
           repository: 'paloni/weatherapp'
           command: 'buildAndPush'
           Dockerfile: '**/dockerfile'
+
+- stage: Provision
+  displayName: 'Terraform on Azure'
+  dependsOn: Build
+  - jobs:
+      job: Provision
+      displayName: 'Provisioning Container Instance'
+      pool:
+        vmImage: 'ubuntu-latest'
+      variables:
+      - group: TerraformEnvVars
+      steps:
+      - script: |
+          set -e
+          terraform init -input=false
+          terraform apply -input=false -auto-approve
+        name: 'RunTerraform'
+        displayName: 'Run Terraform'
+        env:
+          AZURE_CLIENT_ID: $(AZURE_CLIENT_ID)
+          AZURE_CLIENT_SECRET: $(AZURE_CLIENT_SECRET)
+          AZURE_TENANT_ID: $(AZURE_TENANT_ID)
+          AZURE_SUBSCRIPTION_ID: $(AZURE_SUBSCRIPTION_ID)
+          TF_VAR_imagebuild: $(tag)
+
+
